@@ -1,0 +1,112 @@
+---
+title: "holi"
+output: html_document
+date: "2025-11-17"
+---
+```{r}
+library(haven)
+BAS <- read_sav("BASE DE DATOS GENERAL SOLO PTs.sav")
+```
+
+```{r}
+library(stats)
+options(scipen=9999)
+shapiro.test(BAS$AUT_DESFS)
+shapiro.test(BAS$AUT_RPTAEMO)
+shapiro.test(BAS$AUT_MANEJO)
+shapiro.test(BAS$AUT_HABI)
+```
+
+```{r}
+library(stats)
+options(scipen=9999)
+shapiro.test(BAS$EP_DEMO)
+shapiro.test(BAS$EP_AUTO)
+shapiro.test(BAS$EP_PERMI)
+```
+
+```{r}
+library(stats)
+options(scipen=9999)
+cor.test(BAS$EP_DEMO, BAS$AUT_DESFS, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_DEMO, BAS$AUT_RPTAEMO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_DEMO, BAS$AUT_MANEJO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_DEMO, BAS$AUT_HABI, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_DEMO, BAS$AUTOEFICACIA, method = "spearman", exact = FALSE)
+```
+
+
+
+```{r}
+library(stats)
+options(scipen=9999)
+cor.test(BAS$EP_AUTO, BAS$AUT_DESFS, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_AUTO, BAS$AUT_RPTAEMO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_AUTO, BAS$AUT_MANEJO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_AUTO, BAS$AUT_HABI, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_AUTO, BAS$AUTOEFICACIA, method = "spearman", exact = FALSE)
+```
+
+
+
+```{r}
+library(stats)
+options(scipen=9999)
+cor.test(BAS$EP_PERMI, BAS$AUT_DESFS, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_PERMI, BAS$AUT_RPTAEMO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_PERMI, BAS$AUT_MANEJO, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_PERMI, BAS$AUT_HABI, method = "spearman", exact = FALSE)
+cor.test(BAS$EP_PERMI, BAS$AUTOEFICACIA, method = "spearman", exact = FALSE)
+```
+#democratico.
+```{r}
+Mod1 <- lm(BAS$EP_DEMO ~ BAS$AUT_DESFS + BAS$AUT_RPTAEMO +BAS$AUT_HABI, data = BAS)
+summary(Mod1)
+```
+```{r}
+shapiro.test(Mod1$residuals)
+```
+```{r}
+ResEst <- resid(Mod1)
+qqnorm(ResEst)
+qqline(ResEst)
+```
+
+```{r}
+ModEstándar1 <- lm(scale(EP_DEMO) ~ scale(AUT_DESFS) + scale(AUT_RPTAEMO) + scale(AUT_HABI), data=BAS)
+summary(ModEstándar1)
+```
+
+```{r}
+library(olsrr)
+ols_vif_tol(ModEstándar1)
+```
+```{r}
+abs(Mod1[["coefficients"]])
+```
+
+#autoriario
+```{r}
+Mod2 <- lm(BAS$EP_AUTO ~ BAS$AUT_DESFS + BAS$AUT_RPTAEMO +BAS$AUT_HABI, data = BAS)
+summary(Mod2)
+```
+```{r}
+shapiro.test(Mod2$residuals)
+```
+```{r}
+ModEstándar2 <- lm(scale(EP_AUTO) ~ scale(AUT_DESFS) + scale(AUT_RPTAEMO) + scale(AUT_HABI), data=BAS)
+summary(ModEstándar2)
+```
+
+```{r}
+library(olsrr)
+ols_vif_tol(ModEstándar2)
+```
+```{r}
+abs(Mod2[["coefficients"]])
+```
+#permisivo.
+```{r}
+Mod3 <- lm(BAS$EP_PERMI ~ BAS$AUT_RPTAEMO, data = BAS)
+summary(Mod3)
+```
